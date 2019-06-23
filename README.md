@@ -1,6 +1,8 @@
 # rate-limit-probot
 
-A Probot app that accepts a /rate_limit command.
+A Probot app that supports a `/rate_limit` command in issue and pull request comments which creates a comment with the [current rate limit status](http://octokit.github.io/rest.js/#octokit-routes-rateLimit).
+
+![Screenshot of command and response](./docs/command-screenshot.png)
 
 ## Setup
 
