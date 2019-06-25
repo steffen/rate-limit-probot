@@ -28,6 +28,34 @@ module.exports = app => {
         issueComment = context.issue({ body: `Installation ID: **${installationId}**` })
         await context.github.issues.createComment(issueComment)
         break
+      case 'graphql_query':
+        const issueNodeId = context.payload.issue.node_id
+
+        const graphQLQuery = `
+          query ($nodeId: ID!) { 
+            node(id: $nodeId) {
+              ... on Issue {
+                id
+                number
+                title
+              }
+            }
+            rateLimit {
+              limit
+              cost
+              remaining
+              resetAt
+            }
+          }
+        ` 
+
+        const responseData = await context.github.query(graphQLQuery, {
+          nodeId: issueNodeId
+        })
+
+        issueComment = context.issue({ body: '```\n' + JSON.stringify(responseData, null, 2) + '\n```' })
+        await context.github.issues.createComment(issueComment)
+        break
     }
 
     return
